@@ -2,4 +2,3 @@ rootProject.name='Dice Roller'
 include ':app'
 include ':app:aboutme'
 include ':app:colormyviews'
-
