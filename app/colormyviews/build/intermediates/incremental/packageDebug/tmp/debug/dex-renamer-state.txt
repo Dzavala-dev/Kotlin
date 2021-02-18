@@ -1,4 +1,4 @@
-#Tue Feb 16 12:36:22 CST 2021
-base.0=/Users/dzavalaherna/Documents/Cursos/Kotlin/app/colormyviews/build/intermediates/dex/debug/out/classes.dex
+#Wed Feb 17 04:07:09 CST 2021
+base.0=/Users/dzavalaherna/Documents/Cursos/Kotlin/app/colormyviews/build/intermediates/dex/debug/mergeDexDebug/classes.dex
 path.0=classes.dex
 renamed.0=classes.dex

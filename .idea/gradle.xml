@@ -13,9 +13,11 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/app/aboutme" />
             <option value="$PROJECT_DIR$/app/colormyviews" />
+            <option value="$PROJECT_DIR$/app/triviaapp" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
+        <option name="useQualifiedModuleNames" value="true" />
       </GradleProjectSettings>
     </option>
   </component>
