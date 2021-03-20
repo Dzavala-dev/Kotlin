@@ -1,3 +1,7 @@
+# v3.0.0
+## creación de app "sleep-tracker"
+- App that help how much the user sleep
+
 # v2.0.0
 ## creación de app "GameViewModel"
 - App de guess the word
