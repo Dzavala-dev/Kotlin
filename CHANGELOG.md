@@ -1,3 +1,7 @@
+# v6.0.0
+## creación de la app "Mars-Real-Estate"
+- App que implica permisos de internet  
+
 # v5.0.0
 ## Modificacion de la app "sleep-tracker"
 - Sele agrego lo que es Reclyviews 
