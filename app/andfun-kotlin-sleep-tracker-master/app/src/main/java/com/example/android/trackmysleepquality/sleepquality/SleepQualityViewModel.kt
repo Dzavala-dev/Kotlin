@@ -1,19 +1,3 @@
-/*
- * Copyright 2018, The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.android.trackmysleepquality.sleepquality
 
 import androidx.lifecycle.LiveData
@@ -34,11 +18,17 @@ class SleepQualityViewModel(
 
 
     /**
+     * viewModelJob allows us to cancel all coroutines started by this ViewModel.
      */
-
+    private val viewModelJob = Job()
     /**
+     * A [CoroutineScope] keeps track of all coroutines started by this ViewModel.
      *
+     * Because we pass it [viewModelJob], any coroutine started in this scope can be cancelled
+     * by calling `viewModelJob.cancel()`
      *
+     * By default, all coroutines started in uiScope will launch in [Dispatchers.Main] which is
+     * the main thread on Android. This is a sensible default because most coroutines started by
      */
 
     /**
@@ -48,7 +38,6 @@ class SleepQualityViewModel(
      * the [Fragment]
      */
     private val _navigateToSleepTracker = MutableLiveData<Boolean?>()
-
     /**
      * When true immediately navigate back to the [SleepTrackerFragment]
      */
@@ -65,7 +54,6 @@ class SleepQualityViewModel(
     fun doneNavigating() {
         _navigateToSleepTracker.value = null
     }
-
     /**
      * Sets the sleep quality and updates the database.
      *
@@ -73,13 +61,14 @@ class SleepQualityViewModel(
      */
     fun onSetSleepQuality(quality: Int) {
         viewModelScope.launch {
-                val tonight = database.get(sleepNightKey) ?: return@launch
-                tonight.sleepQuality = quality
-                database.update(tonight)
+            // IO is a thread pool for running operations that access the disk, such as
+            // our Room database.
+            val tonight = database.get(sleepNightKey) ?: return@launch
+            tonight.sleepQuality = quality
+            database.update(tonight)
 
             // Setting this state variable to true will alert the observer and trigger navigation.
             _navigateToSleepTracker.value = true
         }
     }
 }
-
