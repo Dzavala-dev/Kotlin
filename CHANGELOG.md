@@ -1,3 +1,7 @@
+# v7.0.0
+## creación de la app "Cahe offline"
+- App que permite ver video offline
+
 # v6.0.0
 ## creación de la app "Mars-Real-Estate"
 - App que implica permisos de internet  
