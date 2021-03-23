@@ -1,3 +1,7 @@
+# v8.0.0
+## creación de la app "About view,styles and theme"
+- App que permite la manipulacion de colores, estilos, temas, layouts
+
 # v7.0.0
 ## creación de la app "Cahe offline"
 - App que permite ver video offline
