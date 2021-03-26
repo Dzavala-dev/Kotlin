@@ -1,0 +1,256 @@
+Clases
+
+Practice Time
+Earlier, we created and filtered a list of spices. Spices are much better represented as objects
+than as simple strings. Because they are objects, we can perform different things with them - such as cooking.
+
+To recap, let's make a simple Spice class. It doesn't do much, but it will serve as the starting point for the next practice.
+
+1. Create class, SimpleSpice.
+2. Let the class be a property with a String for the name of the spice, and a String for the level of spiciness.
+3. Set the name to curry and the spiciness to mild.
+4. Using a string for spiciness is nice for users, but not useful for calculations. Add a heat property
+to your class with a getter that returns a numeric value for spiciness. Use a value of 5 for mild.
+5. Create an instance of SimpleSpice and print out its name and heat.
+
+resp
+
+class SimpleSpice(){
+    val name = "curry"
+    val spiciness = "mild"
+    val heat: Int
+        get() {return 5 }
+}
+
+val simpleSpice = SimpleSpice()
+println("${simpleSpice.name} ${simpleSpice.heat}")
+
+
+-------------------------------
+Constructor
+Practice Time
+Let's improve our SimpleSpice class so that we can have various spices with different levels of spiciness.
+
+1. Create a new class, Spice.
+2. Pass in a mandatory String argument for the name, and a String argument for the level of spiciness where
+the default value is mild for not spicy.
+3. Add a variable, heat, to your class, with a getter that returns a numeric value for each type of spiciness.
+4. Instead of the list of spices as Strings you used earlier, create a list of Spice objects and give each
+object a name and a spiciness level.
+5. Add an init block that prints out the values for the object after it has been created. Create a spice.
+6. Create a list of spices that are spicy or less than spicy. Hint: Use a filter and the heat property.
+7. Because salt is a very common spice, create a helper function called makeSalt().
+
+resp
+
+class Spice(val name: String, val spiciness: String = "mild") {
+
+    private val heat: Int
+        get() {
+            return when (spiciness) {
+                "mild" -> 1
+                "medium" -> 3
+                "spicy" -> 5
+                "very spicy" -> 7
+                "extremely spicy" -> 10
+                else -> 0
+            }
+        }
+}
+
+val spices1 = listOf(
+        Spice("curry", "mild"),
+        Spice("pepper", "medium"),
+        Spice("cayenne", "spicy"),
+        Spice("ginger", "mild"),
+        Spice("red curry", "medium"),
+        Spice("green curry", "mild"),
+        Spice("hot pepper", "extremely spicy")
+)
+
+val spice = Spice("cayenne", spiciness = "spicy")
+val spicelist = spices1.filter {it.heat < 5}
+fun makeSalt() = Spice("Salt")
+
+
+---------------------
+Inheritance
+Practice Time
+Let's talk about books for a moment, those heavy tomes of paper with printed letters.
+
+1. Create a class, Book, with a title and an author.
+2. Add a method, readPage(), that increases the value of a private variable, currentPage, by 1.
+3. Create a subclass of Book; name it eBook.
+4. eBook also takes in a format, which defaults to "text".
+5. In eBooks, counting words makes more sense than pages. Override the readPage()
+method to increase the word count by 250, the average number of words per page from typewriter days.
+
+resp
+
+open class Book(val title: String, val author: String) {
+
+    private var currentPage = 1
+
+    open fun readPage() {
+        currentPage++
+    }
+}
+
+class eBook(title: String, author: String, var format: String = "text") : Book(title, author) {
+
+    private var wordsRead = 0
+
+    override fun readPage() {
+        wordsRead = wordsRead + 250
+    }
+}
+
+--------------------------------
+Interfaces
+
+Practice Time
+Abstract and Interface
+Let's go back to your spices. Make Spice an abstract class, and then create some subclasses that are actual spices.
+
+1. It's easiest (organizationally) if you make a new package, Spices, with a file, Spice, that has a main() function.
+2. Copy/paste your Spice class code into that new file.
+3. Make Spice abstract.
+4. Create a subclass, Curry. Curry can have varying levels of spiciness, so we don't want to use the default value,
+but rather pass in the spiciness value.
+5. Spices are processed in different ways before they can be used. Add an abstract method prepareSpice to Spice,
+and implement it in Curry.
+6. Curry is ground into a powder, so let's call a method grind(). However, grinding is something
+that's not unique to curry, or even to spices, and it's always done in a grinder. So we can create an Interface,
+Grinder, that implements the grind() method. Do that now.
+7. Then add the Grinder interface to the Curry class.
+
+Delegation
+Using the provided code from the lesson for guidance, add a yellow color to Curry.
+
+fun main (args: Array<String>) {
+   delegate()
+}
+
+fun delegate() {
+   val pleco = Plecostomus()
+   println("Fish has has color ${pleco.color}")
+   pleco.eat()
+}
+
+interface FishAction {
+   fun eat()
+}
+
+interface FishColor {
+   val color: String
+}
+
+object GoldColor : FishColor {
+   override val color = "gold"
+}
+
+class PrintingFishAction(val food: String) : FishAction {
+   override fun eat() {
+       println(food)
+   }
+}
+
+class Plecostomus (fishColor: FishColor = GoldColor):
+       FishAction by PrintingFishAction("eat a lot of algae"),
+       FishColor by fishColor
+
+
+1. Create an interface, SpiceColor, that has a color property. You can use a String for the color.
+2. Create a singleton subclass, YellowSpiceColor, using the object keyword, because all instances
+of Curry and other spices can use the same YellowSpiceColor instance.
+3. Add a color property to Curry of type SpiceColor, and set the default value to YellowSpiceColor.
+4. Add SpiceColor as an interface, and let it be by color.
+5. Create an instance of Curry, and print its color. However, color is actually a property common to all spices,
+so you can move it to the parent class.
+6. Change your code so that the SpiceColor interface is added to the Spice class and inherited by Curry.
+
+Resp
+
+abstract class Spice(val name: String, val spiciness: String = "mild", color: SpiceColor) : SpiceColor by color {
+    abstract fun prepareSpice()
+}
+
+class Curry(name: String, spiciness: String,
+            color: SpiceColor = YellowSpiceColor) : Spice(name, spiciness, color), Grinder {
+    override fun grind() {
+    }
+
+    override fun prepareSpice() {
+        grind()
+    }
+}
+
+interface Grinder {
+    fun grind()
+}
+
+interface SpiceColor {
+    val color: String
+}
+
+object YellowSpiceColor : SpiceColor {
+    override val color = "Yellow"
+}
+
+----------------------------------------------
+
+Data Classes
+
+Practice Time
+1. Create a simple data class, SpiceContainer, that holds one spice.
+2. Give SpiceContainer a property, label, that is derived from the name of the spice.
+3. Create some containers with spices and print out their labels.
+
+Resp
+
+data class SpiceContainer(var spice: Spice) {
+    val label = spice.name
+}
+
+val spiceCabinet = listOf(SpiceContainer(Curry("Yellow Curry", "mild")),
+        SpiceContainer(Curry("Red Curry", "medium")),
+        SpiceContainer(Curry("Green Curry", "spicy")))
+
+for(element in spiceCabinet) println(element.label)
+
+
+
+----------------------------
+
+special Purpose Classes
+
+Practice Time
+You used object in the previous lesson and quiz.
+
+And now that you know about enums, here's the code for Color as an enum:
+
+enum class Color(val rgb: Int) {
+   RED(0xFF0000), GREEN(0x00FF00), BLUE(0x0000FF);
+}
+
+1. In SpiceColor, change the type of color from String to the Color class, and set the appropriate color in YellowSpiceColor.
+
+* Hint: The color code for yellow is YELLOW(0xFFFF00)
+
+2. Make Spice a sealed class.
+
+* What is the effect of doing this?
+* Why is this useful?
+
+
+Resp
+
+interface SpiceColor {
+    val color: Color
+}
+
+object YellowSpiceColor : SpiceColor {
+    override val color = Color.YELLOW
+}
+
+Making Spice a sealed class helps keep all the spices together in one file.

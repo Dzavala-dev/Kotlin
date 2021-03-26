@@ -1,0 +1,264 @@
+Pairs
+
+Practice Time
+Let's go through an example of getting information about a book in the format of a Pair. Generally, you want information about both the title and the author, and perhaps also the year.
+
+1. Let’s create a basic book class, with a title, author, and year. Of course, you could get each of the properties separately.
+2. Create a method that returns both the title and the author as a Pair.
+3. Create a method that returns the title, author and year as a Triple. Use the documentation to find out how to use Triple.
+4. Create a book instance.
+5 Print out the information about the book in a sentence, such as: “Here is your book X written by Y in Z.”
+
+RESP
+
+class Book(val title: String, val author: String, val year: Int) {
+
+    fun getTitleAuthor(): Pair<String, String> {
+        return (title to author)
+    }
+
+    fun getTitleAuthorYear(): Triple<String, String, Int> {
+        return Triple(title, author, year)
+    }
+}
+
+fun main(args: Array<String>) {
+
+    val book = Book("Romeon and Juliet", "William Shakespeare", 1597)
+    val bookTitleAuthor = book.getTitleAuthor()
+    val bookTitleAuthorYear = book.getTitleAuthorYear()
+
+    println("Here is your book ${bookTitleAuthor.first} by ${bookTitleAuthor.second}")
+
+    println("Here is your book ${bookTitleAuthorYear.first} " +
+            "by ${bookTitleAuthorYear.second} written in ${bookTitleAuthorYear.third}")
+
+}
+
+
+------------------------------------------------------------------------
+Collections
+
+Practice Time
+One book is rarely alone, and one author rarely writes just one book.
+
+1. Create a Set of book titles called allBooks, for example, by William Shakespeare.
+2. Create a Map called library that associates the set of books, allBooks, to the author.
+3. Use the collections function any() on library to see if any of the books are “Hamlet’
+4. Create a MutableMap called moreBooks, and add one title/author to it.
+5. Use getOrPut() to see whether a title is in the map, and if the title is not in the map, add it.
+
+Hints:
+
+--any() is applied to a collection and takes a lambda as its argument, for example:
+
+myList.any {it.contains(“name”)}
+
+--getOrPut() is a handy function that will check whether a key is in a map, and if it is, will return the value. Otherwise, it will add the key with the supplied value to the map.
+--mapOf() may come in handy.
+
+Resp
+
+val allBooks = setOf("Macbeth", "Romeo and Juliet", "Hamlet", "A Midsummer Night's Dream")
+val library = mapOf("Shakespeare" to allBooks)
+println(library.any { it.value.contains("Hamlet") })
+
+val moreBooks = mutableMapOf<String, String>("Wilhelm Tell" to "Schiller")
+moreBooks.getOrPut("Jungle Book") { "Kipling" }
+moreBooks.getOrPut("Hamlet") { "Shakespeare" }
+println(moreBooks)
+
+
+-----------------------------------------------------------------------
+
+CONSTANTS
+
+constants solo se usan con objetos a diferencia de val
+constants in classes inside a companion object
+
+QUIZ
+
+Let’s continue with our books setup to practice creating constants in Kotlin. There are 3 different ways in
+which you can create constants in Kotlin. It’s not the most exciting topic, but you’ll use constants all the time.
+
+For each situation, decide when you would use a constant, an enum, and a data class.
+
+SITUATION
+
+DATA TYPE
+
+Storing simple values without any functionality. For example, a URL or a numeric code. resp: CONSTANTS
+
+They are objects that store groups of values that are related. They offer type safety. resp: ENUM
+
+Creating objects that only have properties without additional functionality. resp: DATA CLASSES
+
+
+Practice Time
+1. Create a top-level constant for the maximum number of books a person could borrow.
+2. Inside the Book class, create a method canBorrow() that returns true or false depending
+on whether a user has already borrowed the max number of books.
+3. Create a Constants object that provides constants to the book.
+For this example, provide the BASE_URL for all books in the library catalog.
+Inside Book, add a method printUrl that creates and prints a URL composed of BASE_URL, the book title, and “.html”.
+4. The base URL is really of interest to the Book class. As such,
+it makes sense to limit its scope to the Book class. Use a companion
+object to define the constant in Book.
+
+RESP
+
+* const val MAX_NUMBER_BOOKS = 20
+* fun canBorrow(hasBooks: Int): Boolean {
+     return (hasBooks < MAX_NUMBER_BOOKS)
+ }
+
+* object Constants {
+     const val BASE_URL = "http://www.turtlecare.net/"
+ }
+
+* fun printUrl() {
+      println(Constants.BASE_URL + title + ".html")
+  }
+
+* companion object {
+      val BASE_URL = "http://www.turtlecare.net/"
+  }
+
+-------------------------------------------------
+
+EXTENSION FUNCTIONS
+
+Practice Time
+It can be useful to know the weight of a book, for example, for shipping. The weight of a book can
+change because sometimes pages get torn, and the page count changes. While calculating the weight
+could be defined as a method, it’s more like a helper function. Besides, it would hurt a book's
+feelings to have a method that tears up its pages.
+
+1. Add a mutable property pages to Book.
+2. Create an extension function on Book that returns the weight of a book as the page count multiplied by 1.5 grams.
+3. Create another extension, tornPages(), that takes the number of torn pages as an argument and changes the page count of the book.
+4. Write a class Puppy with a method playWithBook() that takes a book as an argument, and removes a random number of pages from the book.
+5. Create a puppy and give it a book to play with, until there are no more pages.
+Note: If you don’t want to give your puppy a book, then create a puzzle toy class and fill it with treats.
+
+RESP
+
+* fun Book.weight() : Double { return (pages * 1.5) }
+* fun Book.tornPages(torn: Int) = if (pages >= torn) pages -= torn else pages = 0
+* class Puppy() {
+      fun playWithBook(book: Book) {
+          book.tornPages(Random().nextInt(12))
+      }
+  }
+* val puppy = Puppy()
+  val book = Book("Oliver Twist", "Charles Dickens", 1837, 540)
+
+  while (book.pages > 0) {
+      puppy.playWithBook(book)
+      println("${book.pages} left in ${book.title}")
+  }
+  println("Sad puppy, no more pages in ${book.title}. ")
+
+
+
+-----------------------------------------------------------------
+GENERIC CLASSES
+
+Practice Time
+Using type hierarchies with generic classes follows a pretty basic pattern that we introduced in the previous segment.
+ There was a lot of material introducing generics, but basically, when you are building them, it boils down to the following steps:
+
+--Create a type/class hierarchy. The parent is non-specific and the sub-types/subclasses are specializations.
+--There is at least one shared property between the classes/types, and it has a different value depending on the subtype
+(otherwise, having the sub-types is pointless).
+--We then have a class that uses all the subtypes, and performs different actions depending on what the values of
+the subtype’s properties are.
+
+Let’s put this into practice using building materials and a building that needs certain amounts of those materials.
+
+1. Create a new package and file and call them Buildings.
+2. Create a class BaseBuildingMaterial with a property numberNeeded that is set to 1. You always need 1 of the base material.
+3. Create two subclasses, Wood and Brick. For BaseBuildingMaterial you need 4 units of wood or 8 units of brick.
+Now you have a type hierarchy.
+4. Create a generic class Building that can take any building material as its argument, and only building materials.
+5. A building always requires 100 base materials. Add a property baseMaterialsNeeded and set it to 100.
+6. Add another property, actualMaterialsNeeded and use a one-line function to calculate this
+from numberNeeded of the passed-in material.
+7. Add a method build() that prints the type and number of materials needed.
+
+Hint: Use reflection to get the class and simple name: instance::class.simpleName
+8. Create a main function and make a building using Wood.
+
+9. If you did this correctly, running main() will print something like “400 Wood required”.
+
+RESP
+
+open class BaseBuildingMaterial() {
+    open val numberNeeded = 1
+}
+
+class Wood : BaseBuildingMaterial() {
+    override val numberNeeded = 4
+}
+
+class Brick : BaseBuildingMaterial() {
+    override val numberNeeded = 8
+}
+
+class Building<T: BaseBuildingMaterial>(val buildingMaterial: T) {
+
+    val baseMaterialsNeeded = 100
+    val actualMaterialsNeeded = buildingMaterial.numberNeeded * baseMaterialsNeeded
+
+    fun build() {
+        println(" $actualMaterialsNeeded ${buildingMaterial::class.simpleName} required")
+    }
+}
+
+fun main(args: Array<String>) {
+    Building(Wood()).build()
+}
+
+OUTPUT
+
+ 400 Wood required
+
+------------------------------------------------------------------
+
+Generic In and Out
+
+Practice Time
+That was a lot of explanations. Fortunately, IntelliJ gives you hints as to whether something
+should be an in or out type in your current code.
+
+Look at the code from the previous practice and consider whether it can be an in type or an out type.
+Notice that the parameter is underlined gray, and if you hover over T, IntelliJ will suggest to make it an “out” type.
+
+RESP
+
+class Building<out T: BaseBuildingMaterial>(val buildingMaterial: T)
+
+------------------------------------------------------------------
+
+Generic Functions
+
+Practice Time
+Create a generic function for type BaseBuildingMaterial and call it isSmallBuilding,
+ which takes a Building with a building material T as an argument.
+ If the materials needed are less than 500, print "small building", otherwise, print "large building".
+
+Note: For this function, IntelliJ recommends not to inline the function.
+Generally, when you create a generic function, follow the IDE's recommendation about inlining.
+
+RESP
+
+fun <T : BaseBuildingMaterial> isSmallBuilding(building: Building<T>) {
+    if (building.actualMaterialsNeeded < 500) println("Small building")
+    else println("large building")
+}
+isSmallBuilding(Building(Brick()))
+
+------------------------------------------------------------------
+
+Annotations
+
